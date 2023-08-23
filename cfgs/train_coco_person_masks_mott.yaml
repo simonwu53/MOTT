@@ -1,0 +1,13 @@
+dataset: coco_person
+coco_path: data/coco
+
+load_mask_head_from_model: models/detr-r50-panoptic-00ce5173.pth
+freeze_mott: true
+masks: true
+
+lr: 0.0001
+lr_drop: 50
+epochs: 50
+
+tracking: true
+tracking_eval: false

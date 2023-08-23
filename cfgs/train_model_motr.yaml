@@ -1,0 +1,6 @@
+num_queries: 500
+hidden_dim: 288
+merge_frame_features: false
+multi_frame_attention: false
+multi_frame_encoding: false
+multi_frame_attention_separate_encoder: false

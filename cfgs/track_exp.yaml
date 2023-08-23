@@ -1,0 +1,57 @@
+seed: 666
+
+#obj_detect_checkpoint_file: models/mot17_crowdhuman_deformable_multi_frame/checkpoint_epoch_40.pth
+#obj_detect_checkpoint_file: models/mot17_ch_cswin_deformable_multi_frame_hpc/checkpoint.pth
+#obj_detect_checkpoint_file: models/mot17_ch_motr_v1e_hpc/checkpoint.pth
+obj_detect_checkpoint_file: models/mot17_ch_mott/checkpoint.pth
+
+# check factory.py for available dataset names
+#dataset_name: MOT17-01-FRCNN
+#dataset_name: MOT17-TEST-FRCNN
+
+# Custom dataset evaluation
+dataset_name: CUSTOM
+data_root_dir: data/videos/Delta
+
+# track, evaluate and write images only for a range of frames (in float fraction)
+frame_range:
+    start: 0.0
+    end: 1.0
+
+# if available load tracking results and only evaluate
+load_results_dir: null
+# directory for outputs
+output_dir: output/Delta/
+# [False, 'debug', 'pretty']
+# compile video with: `ffmpeg -f image2 -framerate 15 -i %06d.jpg -vcodec libx264 -y movie.mp4 -vf scale=320:-1`
+write_images: False
+
+# configuration for the tracker
+tracker_cfg:
+    # [False, 'center_distance', 'min_iou_0_5']
+    public_detections: False
+    # score threshold for detections
+    # new detected queries if score is above threshold
+    detection_obj_score_thresh: 0.4
+    # score threshold for keeping the track alive
+    # keep tracking queries if score is above threshold
+    track_obj_score_thresh: 0.4
+    # NMS threshold for detection
+    detection_nms_thresh: 0.9
+    # NMS theshold while tracking
+    track_nms_thresh: 0.9
+    # number of consective steps a score has to be below track_obj_score_thresh for a track to be terminated
+    steps_termination: 1
+    # distance of previous frame for multi-frame attention
+    prev_frame_dist: 1
+    # How many timesteps inactive tracks are kept and cosidered for reid
+    # keep tracklets for inactive status until meet the patience value
+    inactive_patience: -1
+    # How similar do image and old track need to be to be considered the same person
+    # reid detection queries if cost is less than threshold
+    reid_sim_threshold: 0.0
+    reid_sim_only: false
+    # reid inactive track queries if score is above threshold
+    reid_score_thresh: 0.4
+    # use greedy matching when reid new detected queries
+    reid_greedy_matching: false
