@@ -18,9 +18,9 @@ backbone model. Our model saves up to 62% FLOPS compared with other Transformer-
 fast as them. The results of the proposed model are still competitive among the state-of-the-art methods. Moreover, we
 will open-source our modified Transformer backbone model for general CV tasks as well as the MOT system.
 
-> TODO: Architecture image
+> TODO: Architecture image, results
 
-## Prerequisites
+## Installation
 
 Please visit the [installation.md](docs/installation.md) for guidances.
 
@@ -30,5 +30,32 @@ Please visit the [dataset.md](docs/dataset.md) for dataset preparation. Then, he
 training scripts.
 
 ## Evaluation
+
+### MOT Evaluation
+
+> TODO
+
+### Test your own videos
+
+1. Install and activate the Python environment.
+2. Download the pre-trained weights `cswin_tiny_224.pth` and `mot17_ch_mott.tar.gz`
+   from [OwnCloud](https://owncloud.ut.ee/owncloud/s/wppiGAgSHTxEdJ8).
+3. Put `cswin_tiny_224.pth` in `./models` folder. Extract `mot17_ch_mott` folder and put it in `./models`
+   folder.
+4. Put the testing video (`.mov`, `.mp4`, `.avi` formats) in `./data/videos/` folder.
+5. Run the command at the root of the repo:
+
+```bash
+bash scripts/run_online.sh
+```
+
+The program will show a list of available videos in the folder.
+Select a video by inputting the index number.
+Stop video by issuing key `q`.
+Terminate the program by issuing `ctrl+c`.
+
+The config file of the program is stored in `cfgs/track_online.yaml`.
+
+## Citation
 
 > TODO
