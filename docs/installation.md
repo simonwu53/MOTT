@@ -27,10 +27,10 @@ create a new virtualenv for this project:
 
 ```bash
 # create a virtualenv for this project
-conda create --name trackformer --experimental-solver=libmamba python=3.9 ipython jsonpatch yaml lap tqdm sacred submitit visdom pycocotools matplotlib opencv motmetrics scikit-image seaborn einops 
+conda create --name mott --experimental-solver=libmamba python=3.9 ipython jsonpatch yaml lap tqdm sacred submitit visdom pycocotools matplotlib opencv motmetrics scikit-image seaborn einops 
 
 # activate virtualenv
-conda activate trackformer
+conda activate mott
 ```
 
 ### 2. install pytorch
