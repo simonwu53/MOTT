@@ -10,7 +10,7 @@ Transformer specialized in MOT.
 
 <div align="center">
     <img src="assets/MOT17-03-mott.gif" alt="MOT17-03" width="375"/>
-    <img src="assets/DT-054-mott.gif" alt="MOTS20-08" width="375"/>
+    <img src="assets/DT-054-mott.gif" alt="DanceTrack-054" width="375"/>
     <img src="assets/MOT20-08-mott.gif" alt="MOTS20-08" width="375"/>
 </div>
 
@@ -24,7 +24,9 @@ backbone model. Our model saves up to 62% FLOPS compared with other Transformer-
 fast as them. The results of the proposed model are still competitive among the state-of-the-art methods. Moreover, we
 will open-source our modified Transformer backbone model for general CV tasks as well as the MOT system.
 
-> TODO: Architecture image, results
+<div align="center">
+   <img src="assets/model_arch.png" alt="MOTT-model" width="560"/>
+</div>
 
 ## Installation
 
@@ -39,7 +41,21 @@ training scripts.
 
 ### MOT Evaluation
 
-> TODO
+We split the MOT17 dataset into two halves as shown in the paper, then we trained all models on the first half using the same schedule and evaluated on the second half.
+
+<center>
+
+|    Model    | MOTA  | MOTP  | IDF1  | MT  | ML |
+|:-----------:|:-----:|:-----:|:-----:|:---:|:--:|
+| TransTrack  | 66.5% | 83.4% | 66.8% | 134 | 61 |
+| TrackFormer | 67.0% | 84.1% | 69.5% | 152 | 57 |
+|  **MOTT**   | 71.6% | 84.5% | 71.7% | 166 | 41 |
+
+</center>
+
+```bash
+# TODO
+```
 
 ### Test your own videos
 
