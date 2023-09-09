@@ -1,6 +1,7 @@
 # MOTT: A New Model for Multi-Object Tracking Based on Green Learning Paradigm
 
-This is the official implementation of MOTT paper, a novel multi-object tracking model. The code is inspired
+This is the official implementation of MOTT paper (Under Review in AI Open Journal, Elsevier), a novel multi-object tracking model. 
+The code is inspired
 by [TrackFormer](https://github.com/timmeinhardt/trackformer), [TransTrack](https://github.com/PeizeSun/TransTrack),
 [DETR](https://github.com/fundamentalvision/Deformable-DETR), [CSWin](https://github.com/microsoft/CSWin-Transformer)
 by taking the effective Transformer components (CSWin Encoder, deformable DETR decoder) forming a new light-weighted
@@ -77,6 +78,9 @@ Stop video by issuing key `q`.
 Terminate the program by issuing `ctrl+c`.
 
 The config file of the program is stored in `cfgs/track_online.yaml`.
+
+## Contributors
+Shan Wu; Amnir Hadachi; Chaoru Lu, Damien Vivet. 
 
 ## Citation
 
