@@ -6,7 +6,13 @@ by [TrackFormer](https://github.com/timmeinhardt/trackformer), [TransTrack](http
 by taking the effective Transformer components (CSWin Encoder, deformable DETR decoder) forming a new light-weighted
 Transformer specialized in MOT.
 
-> TODO: image visualization
+**Considering that the manuscript is currently under review for publication, this repository will be subject to ongoing updates.**
+
+<div align="center">
+    <img src="assets/MOT17-03-mott.gif" alt="MOT17-03" width="375"/>
+    <img src="assets/DT-054-mott.gif" alt="MOTS20-08" width="375"/>
+    <img src="assets/MOT20-08-mott.gif" alt="MOTS20-08" width="375"/>
+</div>
 
 ## Motivation
 
