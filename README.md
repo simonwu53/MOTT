@@ -83,7 +83,7 @@ The config file of the program is stored in `cfgs/track_online.yaml`.
 Shan Wu; Amnir Hadachi; Chaoru Lu, Damien Vivet. 
 
 ## Citation
-If you use NetCalib in an academic work, please cite:
+If you use MOTT in an academic work, please cite:
 ```
 @article{wu2023mott,
   title={MOTT: A new model for multi-object tracking based on green learning paradigm},
