@@ -1,13 +1,14 @@
 # MOTT: A New Model for Multi-Object Tracking Based on Green Learning Paradigm
 
-This is the official implementation of MOTT paper, a novel multi-object tracking model. 
+This is the official implementation of MOTT paper, a novel multi-object tracking model.
 The code is inspired
 by [TrackFormer](https://github.com/timmeinhardt/trackformer), [TransTrack](https://github.com/PeizeSun/TransTrack),
 [DETR](https://github.com/fundamentalvision/Deformable-DETR), [CSWin](https://github.com/microsoft/CSWin-Transformer)
 by taking the effective Transformer components (CSWin Encoder, deformable DETR decoder) forming a new light-weighted
 Transformer specialized in MOT.
 
-**Considering that the manuscript is currently under review for publication, this repository will be subject to ongoing updates.**
+**The paper is accepted and published in Journal AI Open. It is
+available [here](https://www.sciencedirect.com/science/article/pii/S2666651023000165).**
 
 <div align="center">
     <img src="assets/MOT17-03-mott.gif" alt="MOT17-03" width="375"/>
@@ -42,21 +43,64 @@ training scripts.
 
 ### MOT Evaluation
 
-We split the MOT17 dataset into two halves as shown in the paper, then we trained all models on the first half using the same schedule and evaluated on the second half.
+We split the MOT17 dataset into two halves as shown in the paper, then we trained all models on the first half using the
+same schedule and evaluated on the second half.
 
 <center>
 
-|    Model    | MOTA  | MOTP  | IDF1  | MT  | ML |
-|:-----------:|:-----:|:-----:|:-----:|:---:|:--:|
-| TransTrack  | 66.5% | 83.4% | 66.8% | 134 | 61 |
-| TrackFormer | 67.0% | 84.1% | 69.5% | 152 | 57 |
-|  **MOTT**   | 71.6% | 84.5% | 71.7% | 166 | 41 |
+|    Model    | MOTA ↑ | MOTP ↑ | IDF1 ↑ | MT ↑ | ML ↓ |
+|:-----------:|:------:|:------:|:------:|:----:|:----:|
+| TransTrack  | 66.5%  | 83.4%  | 66.8%  | 134  |  61  |
+| TrackFormer | 67.0%  | 84.1%  | 69.5%  | 152  |  57  |
+|  **MOTT**   | 71.6%  | 84.5%  | 71.7%  | 166  |  41  |
 
 </center>
 
-```bash
-# TODO
-```
+### Other Datasets
+
+We evaluated MOTT on the testing sets of MOT20 and DanceTrack in addition to MOT17.
+The MOT17 and MOT20 results are obtained from the model trained by corresponding datasets,
+while the DanceTrack results are derived from the MOT20 model without fine-tuning.
+
+<center>
+
+|  Dataset   | MOTA ↑ | MOTP ↑ | IDF1 ↑ | MT ↑  | ML ↓  |
+|:----------:|:------:|:------:|:------:|:-----:|:-----:|
+| DanceTrack | 85.4%  | 81.9%  | 33.7%  | 81.5% | 0.3%  |
+|   MOT20    | 66.5%  | 81.1%  | 57.9%  | 52.1% | 13.8% |
+|   MOT17    | 71.6%  | 84.5%  | 71.7%  | 49.0% | 12.1% |
+
+</center>
+
+### Computing Efficiency
+
+Four models are compared in terms of the number of parameters (#Params), total CUDA time used, and averaged FLOPS.
+
+<center>
+
+|       Model       | #Params (M)↓ | CUDA time (s)↓ | Avg. FLOPS (G)↓ |
+|:-----------------:|:------------:|:--------------:|:---------------:|
+|    TransTrack     |     46.9     |      8.17      |     428.69      |
+|    TrackFormer    |     44.0     |     13.67      |     674.92      |
+| TrackFormer-CSWin |     38.3     |     16.26      |     714.83      |
+|     **MOTT**      |     32.5     |      6.76      |     255.74      |
+
+</center>
+
+### Ablation Study
+
+The ablation study shows the performance differences when gradually removing the components.
+Notations: Res=ResNet50, CSWin=CSWin-tiny, DE=Deformable Encoder, DD=Deformable Decoder.
+
+<center>
+
+|         Modules         | MOTA ↑ | IDF1 ↑ | Hz ↑ |
+|:-----------------------:|:------:|:------:|:----:|
+| Res+DE+DD (TrackFormer) | 66.8%  | 70.7%  | 5.39 |
+|       CSWin+DE+DD       | 72.7%  | 72.9%  | 4.73 |
+|   CSWin+DD (**MOTT**)   | 71.9%  | 72.6%  | 9.09 |
+
+</center>
 
 ### Test your own videos
 
@@ -80,10 +124,13 @@ Terminate the program by issuing `ctrl+c`.
 The config file of the program is stored in `cfgs/track_online.yaml`.
 
 ## Contributors
-Shan Wu; Amnir Hadachi; Chaoru Lu, Damien Vivet. 
+
+Shan Wu; Amnir Hadachi; Chaoru Lu, Damien Vivet.
 
 ## Citation
+
 If you use MOTT in an academic work, please cite:
+
 ```
 @article{wu2023mott,
   title={MOTT: A new model for multi-object tracking based on green learning paradigm},
