@@ -84,4 +84,10 @@ Shan Wu; Amnir Hadachi; Chaoru Lu, Damien Vivet.
 
 ## Citation
 
-> TODO
+@article{wu2023mott,
+  title={MOTT: A new model for multi-object tracking based on green learning paradigm},
+  author={Wu, Shan and Hadachi, Amnir and Lu, Chaoru and Vivet, Damien},
+  journal={AI Open},
+  year={2023},
+  publisher={Elsevier}
+}
