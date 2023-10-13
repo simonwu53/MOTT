@@ -113,7 +113,7 @@ Notations: Res=ResNet50, CSWin=CSWin-tiny, DE=Deformable Encoder, DD=Deformable 
 5. Run the command at the root of the repo:
 
 ```bash
-bash scripts/run_online.sh
+python src/track_online.py
 ```
 
 The program will show a list of available videos in the folder.
@@ -122,6 +122,20 @@ Stop video by issuing key `q`.
 Terminate the program by issuing `ctrl+c`.
 
 The config file of the program is stored in `cfgs/track_online.yaml`.
+
+### Evaluate on datasets
+
+* The dataset should follow the same structure of MOT17, MOT20, or DanceTrack in order to evaluate it.
+* You can find the configuration file at `cfgs/track_exp.yaml`.
+    - `dataset_name` specifies the dataset to use. Check `src/trackformer/datasets/tracking/factory.py` for all
+      available dataset options.
+    - `obj_detect_checkpoint_file`: denotes the path for model checkpoint file.
+
+After modified the configuration, start evaluation by running:
+
+```bash
+python src/track.py with exp
+```
 
 ## Contributors
 
