@@ -10,6 +10,10 @@ Transformer specialized in MOT.
 **The paper is accepted and published in Journal AI Open. It is
 available [here](https://www.sciencedirect.com/science/article/pii/S2666651023000165).**
 
+<a href="https://zenodo.org/doi/10.5281/zenodo.10113485"><img src="https://zenodo.org/badge/682141029.svg" alt="DOI"></a>
+<a href="https://doi.org/10.1016/j.aiopen.2023.09.002"><img src="https://img.shields.io/badge/DOI-10.1016/j.aiopen.2023.09.002-EC008C.svg" alt="DOI"></a>
+
+
 <div align="center">
     <img src="assets/MOT17-03-mott.gif" alt="MOT17-03" width="375"/>
     <img src="assets/DT-054-mott.gif" alt="DanceTrack-054" width="375"/>
