@@ -1,4 +1,10 @@
-#!/usr/bin/env python
+# ------------------------------------------------------------------------------------------------
+# Deformable DETR
+# Copyright (c) 2020 SenseTime. All Rights Reserved.
+# Licensed under the Apache License, Version 2.0 [see LICENSE for details]
+# ------------------------------------------------------------------------------------------------
+# Modified from https://github.com/chengdazhi/Deformable-Convolution-V2-PyTorch/tree/pytorch_1.0.0
+# ------------------------------------------------------------------------------------------------
 
 import os
 import glob
@@ -27,6 +33,8 @@ def get_extensions():
     extra_compile_args = {"cxx": []}
     define_macros = []
 
+
+
     if torch.cuda.is_available() and CUDA_HOME is not None:
         extension = CUDAExtension
         sources += source_cuda
@@ -38,7 +46,7 @@ def get_extensions():
             "-D__CUDA_NO_HALF2_OPERATORS__",
         ]
     else:
-        raise NotImplementedError('Cuda is not available')
+        raise NotImplementedError('Cuda is not availabel')
 
     sources = [os.path.join(extensions_dir, s) for s in sources]
     include_dirs = [extensions_dir]
@@ -57,10 +65,9 @@ setup(
     name="MultiScaleDeformableAttention",
     version="1.0",
     author="Weijie Su",
-    url="xxx",
-    description="Multi-Scale Deformable Attention Module in Deformable DETR",
+    url="https://github.com/fundamentalvision/Deformable-DETR",
+    description="PyTorch Wrapper for CUDA Functions of Multi-Scale Deformable Attention",
     packages=find_packages(exclude=("configs", "tests",)),
-    # install_requires=requirements,
     ext_modules=get_extensions(),
     cmdclass={"build_ext": torch.utils.cpp_extension.BuildExtension},
 )

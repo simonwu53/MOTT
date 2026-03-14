@@ -15,11 +15,6 @@ conda update -n base conda
 conda config --add channels conda-forge
 ```
 
-install libmamba (a faster conda solver):
-
-```bash
-conda install -n base conda-libmamba-solver
-```
 
 ### 1. Create Env
 
@@ -27,31 +22,31 @@ create a new virtualenv for this project:
 
 ```bash
 # create a virtualenv for this project
-conda create --name mott --experimental-solver=libmamba python=3.9 ipython jsonpatch yaml lap tqdm sacred submitit visdom pycocotools matplotlib opencv motmetrics scikit-image seaborn einops 
+conda create --name mott python=3.12 ipython jsonpatch yaml lap tqdm sacred submitit visdom pycocotools matplotlib opencv motmetrics scikit-image seaborn einops
 
 # activate virtualenv
 conda activate mott
 ```
 
-### 2. install pytorch
+### 2. install PyTorch
 
-Before this step, it's wise to check the local CUDA installation first. While `conda` uses a separated
-compiled `cudatoolkit` for each environment, we still need a local CUDA installation to install the customized PyTorch
-module written in pure CUDA & cpp code in. Hence, the CUDA version in `conda`
-and local must be matched. As an example below, if you install `cudatoolkit=11.3` in `conda`, you should have the same
-11.3 version shown in `nvcc -v` in a terminal.
+It is required to install CUDA toolkit locally in your OS to compile deformable attention module required by the decoder in the next step. This local CUDA version should match the version used to compile PyTorch library (you can check it in official PyTorch website).
+
+For example, the PyTorch version 2.10.0 is compiled with CUDA 12.8. In order to compile the deformable attention module, you need to install CUDA 12.8 locally in your OS (check with `nvcc -V` in a terminal). 
 
 ```bash
-# install pytorch 1.12.1 and cudatoolkit 11.3
-conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.3 -c pytorch --experimental-solver=libmamba --strict-channel-priority
+# install pytorch (conda is no longer supported)
+pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu128
 ```
 
 ### 3. install MSD-Attn Module
 
+Note that we leverage Deformable Decoder in MOTT, and the original Deformable Decoder is no longer being updated and become completely obsolete, making it very difficult to install on newer systems. Thus, here we use a maintained version of Deformable Decoder from [Normam-Ou](https://github.com/Norman-Ou/Deformable-DETR-Torch2.x-cuda12), which is compatible with PyTorch 2.x and CUDA 12.x. 
+
 Before installing the customized PyTorch module, we need the following prerequisites:
 
-* local CUDA version 11.3 (the same as above)
-* gcc version 6.0-10.0
+* local CUDA version match the one used to compile PyTorch library (e.g. CUDA 12.8)
+* gcc version 10.0+
 
 Install the MSD-Attn module:
 
@@ -67,5 +62,5 @@ python setup.py build install
 For video loading in testing:
 
 ```bash
-conda install -c conda-forge av --experimental-solver=libmamba
+conda install conda-forge::av
 ```
