@@ -112,7 +112,7 @@ Notations: Res=ResNet50, CSWin=CSWin-tiny, DE=Deformable Encoder, DD=Deformable 
    from [OwnCloud](https://owncloud.ut.ee/owncloud/s/wppiGAgSHTxEdJ8).
 3. Put `cswin_tiny_224.pth` in `./models` folder. Extract `mot17_ch_mott` folder and put it in `./models`
    folder.
-4. Put the testing video (`.mov`, `.mp4`, `.avi` formats) in `./data/videos/` folder.
+4. Put the testing video (`.mp4` format) in `./data/videos/` folder.
 5. Run the command at the root of the repo:
 
 ```bash
@@ -133,6 +133,8 @@ The config file of the program is stored in `cfgs/track_online.yaml`.
     - `dataset_name` specifies the dataset to use. Check `src/trackformer/datasets/tracking/factory.py` for all
       available dataset options.
     - `obj_detect_checkpoint_file`: denotes the path for model checkpoint file.
+    - `seq_name` (`CUSTOM` dataset only): the sequence folder to evaluate. If `null`, a selection menu is shown.
+* `write_images` is only supported for image-frame input; it is skipped for `.mp4` input.
 
 After modified the configuration, start evaluation by running:
 

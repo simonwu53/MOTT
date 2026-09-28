@@ -132,12 +132,12 @@ class DemoSequence(Dataset):
             video_file = []
             for filename in sorted(os.listdir(self._data_dir)):
                 extension = os.path.splitext(filename)[1]
-                if extension in ['.mov', '.mp4', 'avi']:
+                if extension.lower() == '.mp4':
                     video_file.append(osp.join(self._data_dir, filename))
 
             if len(video_file) == 0:
                 raise FileNotFoundError(f"Cannot find a video file in the folder: {self._data_dir}. "
-                                        f"Make sure your video file's extension is one of {['.mov', '.mp4', 'avi']}.")
+                                        f"Make sure your video file's extension is .mp4.")
 
             list_of_files = [': '.join((str(i), f)) for i, f in enumerate(video_file)]
             idx = item_chooser(list_of_files)
@@ -150,10 +150,15 @@ class DemoSequence(Dataset):
 
         return total
 
-    def load_results(self, results_dir: str) -> dict:
+    @property
+    def is_video(self) -> bool:
+        """ Whether frames are decoded from a video file instead of image files. """
+        return self._is_video
+
+    def load_results(self, results_dir: str, frame_offset: int = 0) -> dict:
         return {}
 
-    def write_results(self, results: dict, output_dir: str) -> None:
+    def write_results(self, results: dict, output_dir: str, frame_offset: int = 0) -> None:
         """Write the tracks in the format for MOT16/MOT17 sumbission
 
         results: dictionary with 1 dictionary for every track with
@@ -180,7 +185,7 @@ class DemoSequence(Dataset):
                     y2 = data['bbox'][3]
 
                     writer.writerow([
-                        frame + 1,
+                        frame + frame_offset + 1,
                         i + 1,
                         x1 + 1,
                         y1 + 1,
