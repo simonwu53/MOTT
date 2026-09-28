@@ -4,13 +4,14 @@ seed: 666
 
 obj_detect_checkpoint_file: models/mot17_crowdhuman_deformable_multi_frame/checkpoint_epoch_40.pth
 
-interpolate: False
 # if available load tracking results and only evaluate
 load_results_dir: null
 
 # dataset (look into src/datasets/tracking/factory.py)
 dataset_name: MOT17-ALL-ALL
 data_root_dir: data
+# CUSTOM dataset only: sequence folder name under data_root_dir, null shows a selection menu
+seq_name: null
 
 # [False, 'debug', 'pretty']
 # compile video with: `ffmpeg -f image2 -framerate 15 -i %06d.jpg -vcodec libx264 -y movie.mp4 -vf scale=320:-1`

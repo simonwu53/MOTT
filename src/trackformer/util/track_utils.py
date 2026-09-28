@@ -16,7 +16,6 @@ import torchvision.transforms.functional as F
 import tqdm
 from cycler import cycler as cy
 from matplotlib import colors
-from scipy.interpolate import interp1d
 
 matplotlib.use('Agg')
 
@@ -234,41 +233,6 @@ def plot_sequence(tracks, data_loader, output_dir, write_images, generate_attent
         plt.draw()
         plt.savefig(osp.join(output_dir, osp.basename(img_path)), dpi=96)
         plt.close()
-
-
-def interpolate_tracks(tracks):
-    for i, track in tracks.items():
-        frames = []
-        x0 = []
-        y0 = []
-        x1 = []
-        y1 = []
-
-        for f, data in track.items():
-            frames.append(f)
-            x0.append(data['bbox'][0])
-            y0.append(data['bbox'][1])
-            x1.append(data['bbox'][2])
-            y1.append(data['bbox'][3])
-
-        if frames:
-            x0_inter = interp1d(frames, x0)
-            y0_inter = interp1d(frames, y0)
-            x1_inter = interp1d(frames, x1)
-            y1_inter = interp1d(frames, y1)
-
-            for f in range(min(frames), max(frames) + 1):
-                bbox = np.array([
-                    x0_inter(f),
-                    y0_inter(f),
-                    x1_inter(f),
-                    y1_inter(f)])
-                tracks[i][f]['bbox'] = bbox
-        else:
-            tracks[i][frames[0]]['bbox'] = np.array([
-                x0[0], y0[0], x1[0], y1[0]])
-
-    return interpolated
 
 
 def bbox_transform_inv(boxes, deltas):

@@ -148,7 +148,7 @@ class Player:
 
 @ex.automain
 def main(seed, output_dir, verbose, obj_detect_checkpoint_file, dataset_name,
-         data_root_dir, load_results_dir, frame_range, tracker_cfg, checkpoint_version,
+         data_root_dir, seq_name, load_results_dir, frame_range, tracker_cfg, checkpoint_version,
          _config, _log, _run):
     # print config
     sacred.commands.print_config(_run)
@@ -186,7 +186,8 @@ def main(seed, output_dir, verbose, obj_detect_checkpoint_file, dataset_name,
 
     # load dataset
     dataset = TrackDatasetFactory(
-        dataset_name, root_dir=data_root_dir, img_transform=img_transform, include_original_img=True)
+        dataset_name, seq_name=seq_name, root_dir=data_root_dir, img_transform=img_transform,
+        include_original_img=True)
 
     ##########################
     #     Start Tracking     #
@@ -217,7 +218,7 @@ def main(seed, output_dir, verbose, obj_detect_checkpoint_file, dataset_name,
         num_frames += len(seq_loader)
 
         # load previous recorded results (replay)
-        results = seq.load_results(load_results_dir)
+        results = seq.load_results(load_results_dir, frame_offset=start_frame)
 
         if not results:
             start = time.time()

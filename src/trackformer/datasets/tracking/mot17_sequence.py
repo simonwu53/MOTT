@@ -213,11 +213,13 @@ class MOT17Sequence(Dataset):
 
         return f"{self}.txt"
 
-    def write_results(self, results: dict, output_dir: str) -> None:
+    def write_results(self, results: dict, output_dir: str, frame_offset: int = 0) -> None:
         """Write the tracks in the format for MOT16/MOT17 sumbission
 
         results: dictionary with 1 dictionary for every track with
                  {..., i:np.array([x1,y1,x2,y2]), ...} at key track_num
+        frame_offset: index of the first tracked frame in the sequence, added to the
+                      (range-relative) frame ids so they match the sequence numbering
 
         Each file contains these lines:
         <frame>, <id>, <bb_left>, <bb_top>, <bb_width>, <bb_height>, <conf>, <x>, <y>, <z>
@@ -240,7 +242,7 @@ class MOT17Sequence(Dataset):
                     y2 = data['bbox'][3]
 
                     writer.writerow([
-                        frame + 1,
+                        frame + frame_offset + 1,
                         i + 1,
                         x1 + 1,
                         y1 + 1,
@@ -248,7 +250,12 @@ class MOT17Sequence(Dataset):
                         y2 - y1 + 1,
                         -1, -1, -1, -1])
 
-    def load_results(self, results_dir: str) -> dict:
+    def load_results(self, results_dir: str, frame_offset: int = 0) -> dict:
+        """Load results written by `write_results`.
+
+        frame_offset: index of the first frame of the evaluated range. Frame ids are shifted
+                      to be relative to it, and rows before it are skipped.
+        """
         results = {}
         if results_dir is None:
             return results
@@ -262,7 +269,9 @@ class MOT17Sequence(Dataset):
             csv_reader = csv.reader(file, delimiter=',')
 
             for row in csv_reader:
-                frame_id, track_id = int(row[0]) - 1, int(row[1]) - 1
+                frame_id, track_id = int(row[0]) - 1 - frame_offset, int(row[1]) - 1
+                if frame_id < 0:
+                    continue
 
                 if track_id not in results:
                     results[track_id] = {}

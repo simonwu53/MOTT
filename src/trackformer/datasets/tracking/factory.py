@@ -6,7 +6,7 @@
 """
 Factory of tracking datasets.
 """
-from typing import Union
+from typing import Optional, Union
 
 from torch.utils.data import ConcatDataset
 
@@ -48,11 +48,13 @@ class TrackDatasetFactory:
     can be accessed.
     """
 
-    def __init__(self, datasets: Union[str, list], **kwargs) -> None:
+    def __init__(self, datasets: Union[str, list], seq_name: Optional[str] = None, **kwargs) -> None:
         """Initialize the corresponding dataloader.
 
         Keyword arguments:
         datasets --  the name of the dataset or list of dataset names
+        seq_name -- sequence to load for the CUSTOM dataset (skips the interactive menu),
+                    ignored by other datasets
         kwargs -- arguments used to call the datasets
         """
         if isinstance(datasets, str):
@@ -62,10 +64,11 @@ class TrackDatasetFactory:
         for dataset in datasets:
             assert dataset in DATASETS, f"[!] Dataset not found: {dataset}"
 
+            dataset_kwargs = dict(kwargs, seq_name=seq_name) if dataset == 'CUSTOM' else kwargs
             if self._data is None:
-                self._data = DATASETS[dataset](kwargs)
+                self._data = DATASETS[dataset](dataset_kwargs)
             else:
-                self._data = ConcatDataset([self._data, DATASETS[dataset](kwargs)])
+                self._data = ConcatDataset([self._data, DATASETS[dataset](dataset_kwargs)])
 
     def __len__(self) -> int:
         return len(self._data)

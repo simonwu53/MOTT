@@ -174,7 +174,7 @@ class CustomSequence(Dataset):
                 }
                 for i in range(1, self.seq_length + 1)
             ]
-        elif self.config['imExt'] in ['.mov', '.mp4', 'avi']:
+        elif self.config['imExt'].lower() == '.mp4':
             self._is_video = True
             video_file = self._get_vid_file(src_dir.as_posix(), ext=self.config['imExt'])
             frames, _, _ = read_video(video_file, output_format='TCHW')
@@ -188,7 +188,8 @@ class CustomSequence(Dataset):
                 for i in range(1, self.seq_length + 1)
             ]
         else:
-            raise ValueError('Cannot determine the type of data source.')
+            raise ValueError(f"Unsupported imExt ({self.config['imExt']}) in seqinfo.ini. "
+                             f"Use one of ['.jpg', '.png', '.mp4'].")
 
         return total
 
@@ -224,7 +225,12 @@ class CustomSequence(Dataset):
 
         return boxes, visibility
 
-    def load_results(self, results_dir: str) -> dict:
+    def load_results(self, results_dir: str, frame_offset: int = 0) -> dict:
+        """Load results written by `write_results`.
+
+        frame_offset: index of the first frame of the evaluated range. Frame ids are shifted
+                      to be relative to it, and rows before it are skipped.
+        """
         results = {}
         if results_dir is None:
             return results
@@ -238,7 +244,9 @@ class CustomSequence(Dataset):
             csv_reader = csv.reader(file, delimiter=',')
 
             for row in csv_reader:
-                frame_id, track_id = int(row[0]) - 1, int(row[1]) - 1
+                frame_id, track_id = int(row[0]) - 1 - frame_offset, int(row[1]) - 1
+                if frame_id < 0:
+                    continue
 
                 if track_id not in results:
                     results[track_id] = {}
@@ -254,11 +262,13 @@ class CustomSequence(Dataset):
 
         return results
 
-    def write_results(self, results: dict, output_dir: str) -> None:
+    def write_results(self, results: dict, output_dir: str, frame_offset: int = 0) -> None:
         """Write the tracks in the format for MOT16/MOT17 sumbission
 
         results: dictionary with 1 dictionary for every track with
                  {..., i:np.array([x1,y1,x2,y2]), ...} at key track_num
+        frame_offset: index of the first tracked frame in the sequence, added to the
+                      (range-relative) frame ids so they match the sequence numbering
 
         Each file contains these lines:
         <frame>, <id>, <bb_left>, <bb_top>, <bb_width>, <bb_height>, <conf>, <x>, <y>, <z>
@@ -281,7 +291,7 @@ class CustomSequence(Dataset):
                     y2 = data['bbox'][3]
 
                     writer.writerow([
-                        frame + 1,
+                        frame + frame_offset + 1,
                         i + 1,
                         x1 + 1,
                         y1 + 1,
@@ -295,7 +305,7 @@ class CustomSequence(Dataset):
         video_file = []
         for filename in sorted(os.listdir(src_dir)):
             extension = os.path.splitext(filename)[1]
-            if extension == ext:
+            if extension.lower() == ext.lower():
                 video_file.append(osp.join(src_dir, filename))
 
         if len(video_file) < 1:
@@ -310,6 +320,11 @@ class CustomSequence(Dataset):
         config = configparser.ConfigParser()
         config.read(self._config_path)
         return config['Sequence']
+
+    @property
+    def is_video(self) -> bool:
+        """ Whether frames are decoded from a video file instead of image files. """
+        return self._is_video
 
     @property
     def seq_length(self) -> int:

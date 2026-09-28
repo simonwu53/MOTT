@@ -37,7 +37,7 @@ python src/generate_coco_from_crowdhuman.py
 For fast evaluation, we can use videos files directly which meeting the following requirements:
 
 * Put in `./data/videos` folder.
-* `.mov`, `.mp4`, `.avi` formats.
+* `.mp4` format.
 
 The process of loading video into system memory has not been optimized, the limitation may apply depending on the
 specific setups.

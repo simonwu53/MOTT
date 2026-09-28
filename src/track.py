@@ -26,7 +26,7 @@ from trackformer.models import initialize_model
 from trackformer.models.tracker import Tracker
 from trackformer.util.misc import nested_dict_to_namespace
 from trackformer.util.track_utils import (evaluate_mot_accums, get_mot_accum,
-                                          interpolate_tracks, plot_sequence)
+                                          plot_sequence)
 
 mm.lap.default_solver = 'lap'
 
@@ -38,8 +38,8 @@ ex.add_named_config('exp', 'cfgs/track_exp.yaml')
 
 @ex.automain
 def main(seed, dataset_name, obj_detect_checkpoint_file, tracker_cfg,
-         write_images, output_dir, interpolate, verbose, load_results_dir,
-         data_root_dir, generate_attention_maps, frame_range,
+         write_images, output_dir, verbose, load_results_dir,
+         data_root_dir, seq_name, generate_attention_maps, frame_range,
          _config, _log, _run, obj_detector_model=None):
     if write_images:
         assert output_dir is not None
@@ -92,7 +92,7 @@ def main(seed, dataset_name, obj_detect_checkpoint_file, tracker_cfg,
     num_frames = 0
     mot_accums = []
     dataset = TrackDatasetFactory(
-        dataset_name, root_dir=data_root_dir, img_transform=img_transform)
+        dataset_name, seq_name=seq_name, root_dir=data_root_dir, img_transform=img_transform)
 
     for seq in dataset:
         tracker.reset()
@@ -108,7 +108,7 @@ def main(seed, dataset_name, obj_detect_checkpoint_file, tracker_cfg,
 
         num_frames += len(seq_loader)
 
-        results = seq.load_results(load_results_dir)
+        results = seq.load_results(load_results_dir, frame_offset=start_frame)
 
         if not results:
             start = time.time()
@@ -124,12 +124,9 @@ def main(seed, dataset_name, obj_detect_checkpoint_file, tracker_cfg,
             _log.info(f"NUM TRACKS: {len(results)} ReIDs: {tracker.num_reids}")
             _log.info(f"RUNTIME: {time.time() - start :.2f} s")
 
-            if interpolate:
-                results = interpolate_tracks(results)
-
             if output_dir is not None:
                 _log.info(f"WRITE RESULTS")
-                seq.write_results(results, output_dir)
+                seq.write_results(results, output_dir, frame_offset=start_frame)
         else:
             _log.info("LOAD RESULTS")
 
@@ -167,10 +164,14 @@ def main(seed, dataset_name, obj_detect_checkpoint_file, tracker_cfg,
                 _log.info(f'SWITCH_GAPS_HIST (bin_width=10): {switch_gaps_hist}')
 
         if output_dir is not None and write_images:
-            _log.info("PLOT SEQ")
-            plot_sequence(
-                results, seq_loader, osp.join(output_dir, dataset_name, str(seq)),
-                write_images, generate_attention_maps)
+            if getattr(seq, 'is_video', False):
+                _log.warning("write_images is not supported for video input, skip plotting. "
+                             "Extract the video into image frames to enable it.")
+            else:
+                _log.info("PLOT SEQ")
+                plot_sequence(
+                    results, seq_loader, osp.join(output_dir, dataset_name, str(seq)),
+                    write_images, generate_attention_maps)
 
     if time_total:
         _log.info(f"RUNTIME ALL SEQS (w/o EVAL or IMG WRITE): "

@@ -12,6 +12,8 @@ obj_detect_checkpoint_file: models/mot17_ch_mott/checkpoint.pth
 # Custom dataset evaluation
 dataset_name: CUSTOM
 data_root_dir: data/videos/Delta
+# sequence folder name under data_root_dir, null shows a selection menu
+seq_name: null
 
 # track, evaluate and write images only for a range of frames (in float fraction)
 frame_range:
@@ -46,7 +48,7 @@ tracker_cfg:
     prev_frame_dist: 1
     # How many timesteps inactive tracks are kept and cosidered for reid
     # keep tracklets for inactive status until meet the patience value
-    inactive_patience: -1
+    inactive_patience: 5
     # How similar do image and old track need to be to be considered the same person
     # reid detection queries if cost is less than threshold
     reid_sim_threshold: 0.0

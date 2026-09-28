@@ -69,7 +69,7 @@ class MOTS20Sequence(MOT17Sequence):
 
         return boxes, visibility
 
-    def write_results(self, results: dict, output_dir: str) -> None:
+    def write_results(self, results: dict, output_dir: str, frame_offset: int = 0) -> None:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
@@ -83,14 +83,14 @@ class MOTS20Sequence(MOT17Sequence):
                     rle_mask = rletools.encode(mask)
 
                     writer.writerow([
-                        frame + 1,
+                        frame + frame_offset + 1,
                         i + 1,
                         2,  # class pedestrian
                         mask.shape[0],
                         mask.shape[1],
                         rle_mask['counts'].decode(encoding='UTF-8')])
 
-    def load_results(self, results_dir: str) -> dict:
+    def load_results(self, results_dir: str, frame_offset: int = 0) -> dict:
         results = {}
 
         if results_dir is None:
@@ -123,13 +123,16 @@ class MOTS20Sequence(MOT17Sequence):
                 #     'counts': mask_object.mask['counts'].decode(encoding='UTF-8')}
 
                 track_id = mask_object.track_id - 1
+                frame_idx = frame_id - 1 - frame_offset
+                if frame_idx < 0:
+                    continue
                 if track_id not in results:
                     results[track_id] = {}
 
-                results[track_id][frame_id - 1] = {}
-                results[track_id][frame_id - 1]['mask'] = rletools.decode(mask_object.mask)
-                results[track_id][frame_id - 1]['bbox'] = bbox.tolist()
-                results[track_id][frame_id - 1]['score'] = 1.0
+                results[track_id][frame_idx] = {}
+                results[track_id][frame_idx]['mask'] = rletools.decode(mask_object.mask)
+                results[track_id][frame_idx]['bbox'] = bbox.tolist()
+                results[track_id][frame_idx]['score'] = 1.0
 
         return results
 
